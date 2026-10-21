@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ANWB - Roadside assistance, energy, EV charging, insurance</title>
+<meta name="description" content="Demo replica of anwb.nl instrumented with Amplitude Analytics, Session Replay, Web Experiment and Guides & Surveys.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Signika:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- ===== Amplitude: Unified Script (Analytics + Session Replay + Web Experiment) + Guides & Surveys ===== -->
+<script src="https://cdn.amplitude.com/script/a2a36cc24c63469ac2a375be4cce6923.js"></script>
+<script src="https://cdn.amplitude.com/script/a2a36cc24c63469ac2a375be4cce6923.engagement.js"></script>
+<script>
+  // Safety net: if the Amplitude CDN is blocked (corporate proxy, ad blocker) the demo still works, it just does not track.
+  if (!window.amplitude) { console.warn('Amplitude script not loaded'); window.amplitude = { add(){}, init(){}, track(){}, identify(){}, setUserId(){}, setDeviceId(){}, getDeviceId(){ return null; }, reset(){}, Identify: class { set(){ return this; } setOnce(){ return this; } } }; }
+  if (!window.sessionReplay) window.sessionReplay = { plugin(){ return {}; } };
+  if (!window.engagement) window.engagement = { plugin(){ return {}; } };
+</script>
+<script>
+  window.ANWB_CONFIG = {
+    amplitudeApiKey: "a2a36cc24c63469ac2a375be4cce6923",   // anwb.nl website, project 884501 (org 46900)
+    appUrl: "[https://<your-github-user>.github.io/anwb-energie-app/]",   // the published app demo, used for the QR handoff
+    webExperimentFlag: "energy-page-bundle-hero"
+  };
+  window.amplitude.add(window.engagement.plugin());
+  window.amplitude.add(window.sessionReplay.plugin({ sampleRate: 1 }));
+  window.amplitude.init(window.ANWB_CONFIG.amplitudeApiKey, {
+    fetchRemoteConfig: true,
+    autocapture: { pageViews: { trackHistoryChanges: 'all' }, sessions: true, formInteractions: true, fileDownloads: false, elementInteractions: true, attribution: true }
+  });
+</script>
+<style>
+  :root{--yellow:#FFCC00;--yellow-deep:#F2B800;--navy:#00387A;--navy-deep:#002B5C;--ink:#1B2430;--ink-soft:#56606E;--line:#E3E7ED;--paper:#fff;--sand:#F5F3EC;--green:#1E8E5A;--red:#C8321E;--sky:#E8F1FB;--font:"Signika",system-ui,-apple-system,"Segoe UI",sans-serif}
+  *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:var(--font);color:var(--ink);background:var(--paper);line-height:1.45}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+  a{color:var(--navy)} img{max-width:100%}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  header.top{background:var(--yellow);position:sticky;top:0;z-index:20;box-shadow:0 2px 0 rgba(0,0,0,.05)}
+  .topin{display:flex;align-items:center;gap:22px;height:64px}
+  .wordmark{font-weight:700;color:var(--navy);font-size:24px;letter-spacing:.05em;text-decoration:none}
+  nav.main{display:flex;gap:4px;flex:1;overflow-x:auto} nav.main a{text-decoration:none;color:var(--navy-deep);font-weight:600;padding:8px 12px;border-radius:8px;white-space:nowrap;font-size:15px} nav.main a:hover,nav.main a.active{background:rgba(0,56,122,.1)}
+  .login{background:var(--navy);color:#fff;border:0;font:inherit;font-weight:600;padding:9px 14px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  .page{display:none} .page.active{display:block}
+  .hero{background:var(--navy);color:#fff;padding:56px 0}
+  .hero h1{font-size:clamp(30px,4.5vw,50px);line-height:1.05;margin:0 0 16px;max-width:14ch}
+  .hero p{font-size:18px;max-width:52ch;color:#D7E2F1;margin:0 0 24px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:28px 0}
+  .tile{background:var(--sand);border-radius:16px;padding:22px;border:0;text-align:left;font:inherit;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:8px;min-height:150px}
+  .tile:hover,.tile:focus-visible{background:#EEEAD9;outline:none} .tile b{font-size:18px;color:var(--navy)} .tile span{color:var(--ink-soft);font-size:14px}
+  .tile .ico{font-size:28px;line-height:1}
+  h2{font-size:28px;color:var(--navy);margin:36px 0 10px} h3{font-size:19px;margin:18px 0 6px}
+  .btn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-weight:600;font-size:16px;padding:13px 20px;border-radius:12px;border:0;cursor:pointer;background:var(--yellow);color:var(--navy-deep)}
+  .btn.navy{background:var(--navy);color:#fff} .btn.ghost{background:transparent;border:2px solid var(--navy);color:var(--navy)} .btn.small{padding:8px 12px;font-size:14px}
+  .btn:focus-visible{outline:3px solid var(--navy);outline-offset:2px} .btn[disabled]{opacity:.5;cursor:not-allowed}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;margin:14px 0}
+  .card.sand{background:var(--sand);border:0} .card.navy{background:var(--navy);color:#fff;border:0}
+  .two{display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:start} @media (max-width:800px){.two{grid-template-columns:1fr}}
+  input,select{font:inherit;padding:12px;border:1.5px solid var(--line);border-radius:10px;width:100%;background:#fff} input:focus,select:focus{outline:2px solid var(--navy)}
+  label{display:block;font-size:14px;color:var(--ink-soft);margin:12px 0 4px}
+  .plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+  .plan{border:2px solid var(--line);border-radius:16px;padding:18px;cursor:pointer;background:#fff;text-align:left;font:inherit} .plan.on{border-color:var(--navy);background:var(--sky)} .plan b{font-size:18px;display:block} .plan .price{font-size:26px;font-weight:700;color:var(--navy);margin:6px 0}
+  .pill{display:inline-block;background:var(--sky);color:var(--navy);font-size:13px;font-weight:600;padding:4px 10px;border-radius:999px} .pill.green{background:#E3F4EA;color:var(--green)}
+  .xsell{display:flex;gap:16px;align-items:center;background:linear-gradient(135deg,#FFF3B8,#FFE066);border-radius:16px;padding:18px 20px;margin:18px 0;border:0;width:100%;text-align:left;font:inherit;cursor:pointer;color:var(--navy-deep)}
+  .xsell b{font-size:17px;display:block} .xsell span{font-size:14px}
+  .qr{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center}
+  .qrbox{width:120px;height:120px;background:#fff;border:1px solid var(--line);border-radius:10px;display:grid;grid-template-columns:repeat(9,1fr);padding:8px;gap:2px} .qrbox i{background:var(--ink);border-radius:1px} .qrbox i.o{background:transparent}
+  .modal{position:fixed;inset:0;background:rgba(0,20,50,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:20px} .modal.open{display:flex}
+  .modal .box{background:#fff;border-radius:18px;padding:26px;max-width:560px;width:100%;max-height:90vh;overflow:auto}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;opacity:0;transition:.25s;z-index:60;pointer-events:none} .toast.show{opacity:1;transform:translateX(-50%)}
+  .error{background:#FBE7E3;color:var(--red);border-radius:10px;padding:10px 12px;font-size:14px;margin:8px 0}
+  footer{background:var(--sand);margin-top:60px;padding:32px 0;color:var(--ink-soft);font-size:14px}
+  ul.list{list-style:none;margin:0;padding:0} ul.list li{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)} ul.list li:last-child{border:0}
+  .steps{display:flex;gap:6px;margin:6px 0 14px} .steps i{flex:1;height:5px;border-radius:3px;background:var(--line)} .steps i.on{background:var(--navy)}
+  .choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:8px 0} .choice button{font:inherit;padding:12px;border-radius:12px;border:2px solid var(--line);background:#fff;cursor:pointer;text-align:left} .choice button.on{border-color:var(--navy);background:var(--sky)}
+  .hero.bundle-first{background:linear-gradient(120deg,#002B5C,#0A5BB5)}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap topin">
+  <a class="wordmark" href="#/" data-nav="home">ANWB</a>
+  <nav class="main">
+    <a href="#/wegenwacht" data-nav="roadside">Roadside assistance</a><a href="#/verzekeringen" data-nav="insurance">Insurance</a><a href="#/energie" data-nav="energy">Energy</a><a href="#/ev-laden" data-nav="ev">EV charging</a><a href="#/smart-home" data-nav="bundle">Smart home</a><a href="#/vakantie" data-nav="travel">Holidays</a><a href="#/webshop" data-nav="shop">Webshop</a>
+  </nav>
+  <button class="login" id="loginBtn">Log in to Mijn ANWB</button>
+</div></header>
+
+<!-- ================= HOME ================= -->
+<main>
+<section class="page" id="p-home">
+  <div class="hero"><div class="wrap">
+    <h1>One ANWB for everything on the road and at home</h1>
+    <p>5.3 million members rely on us for roadside assistance, insurance, energy, EV charging and holidays. Members get discounts across all of them.</p>
+    <button class="btn" data-nav="roadside">Become a member</button> &nbsp; <button class="btn ghost" style="border-color:#fff;color:#fff" data-nav="energy">See energy tariffs</button>
+  </div></div>
+  <div class="wrap">
+    <div class="grid">
+      <button class="tile" data-tile="roadside"><span class="ico">🛠</span><b>Wegenwacht</b><span>Roadside assistance within 45 minutes, in the Netherlands and across Europe.</span></button>
+      <button class="tile" data-tile="insurance"><span class="ico">🛡</span><b>Insurance</b><span>Car, travel and home insurance with 10% member discount.</span></button>
+      <button class="tile" data-tile="energy"><span class="ico">⚡</span><b>Energy</b><span>Dynamic and fixed contracts. See hourly prices in the ANWB Energie app.</span></button>
+      <button class="tile" data-tile="ev"><span class="ico">🔌</span><b>EV charging</b><span>One charging card for 500,000 chargers in Europe.</span></button>
+      <button class="tile" data-tile="bundle"><span class="ico">☀</span><b>Smart home</b><span>Solar panels, home battery and wallbox as one bundle.</span></button>
+      <button class="tile" data-tile="travel"><span class="ico">🧭</span><b>Holidays</b><span>Camping, road trips and member deals.</span></button>
+    </div>
+    <h2>Popular this week</h2>
+    <button class="xsell" id="homeXsell" data-product="energy"><div><b>Already an EV driver? Charge at home for € 0,19 per kWh</b><span>Combine your ANWB charging card with ANWB Energie and save on average € 21 a month.</span></div></button>
+  </div>
+</section>
+
+<!-- ================= ENERGY ================= -->
+<section class="page" id="p-energy">
+  <div class="hero" id="energyHero"><div class="wrap">
+    <h1 id="energyH1">Energy that follows the price, not the other way round</h1>
+    <p id="energyP">A dynamic contract with hourly prices, or fixed for 1 or 3 years. Members get € 50 welcome credit.</p>
+    <button class="btn" id="energyCta">Calculate my tariff</button>
+  </div></div>
+  <div class="wrap two">
+    <div>
+      <div class="card" id="energyCalc">
+        <h3>What will I pay?</h3>
+        <label for="pc">Postcode</label><input id="pc" placeholder="1015 CN" autocomplete="off">
+        <label for="hh">Household size</label><select id="hh"><option>1 person</option><option selected>2 people</option><option>3 people</option><option>4 or more</option></select>
+        <div style="height:14px"></div><button class="btn navy" id="compareBtn">Compare tariffs</button>
+      </div>
+      <div class="card" id="tariffs" hidden>
+        <h3>Your tariffs</h3>
+        <div class="plans">
+          <button class="plan" data-ct="dynamic"><b>Dynamic</b><div class="price">€ 118<span style="font-size:14px;font-weight:400">/month</span></div><span class="pill green">cheapest for your profile</span><p>Hourly prices, pay less when you shift usage.</p></button>
+          <button class="plan" data-ct="fixed_1y"><b>Fixed 1 year</b><div class="price">€ 132<span style="font-size:14px;font-weight:400">/month</span></div><p>Price certainty for one year.</p></button>
+          <button class="plan" data-ct="fixed_3y"><b>Fixed 3 years</b><div class="price">€ 139<span style="font-size:14px;font-weight:400">/month</span></div><p>Lock in for three years.</p></button>
+        </div>
+        <p style="margin-top:10px"><a href="#" id="explainer">What does a dynamic tariff mean for my bill?</a></p>
+        <button class="btn" id="quoteStart" disabled>Start my contract</button>
+      </div>
+      <div class="card" id="quoteForm" hidden>
+        <div class="steps"><i class="on"></i><i class="on"></i><i></i></div>
+        <h3>Your details</h3>
+        <div id="prefillNote"></div>
+        <label for="qn">Name</label><input id="qn"><label for="qa">Address</label><input id="qa"><label for="qi">IBAN</label><input id="qi" placeholder="NL00 ANWB 0000 0000 00">
+        <label><input type="checkbox" id="smart" style="width:auto"> I have a smart meter</label>
+        <div style="height:12px"></div><button class="btn navy" id="quoteDone">Complete quote</button>
+      </div>
+      <div class="card sand" id="quoteOk" hidden><h3>Your contract is ready to sign</h3><p>Estimated monthly amount: <b id="okAmount">€ 118</b>. Member discount applied.</p><button class="btn navy" id="signup">Sign contract</button> &nbsp; <span id="signedNote"></span></div>
+    </div>
+    <aside>
+      <div class="card navy"><h3 style="margin-top:0">Get the ANWB Energie app</h3><p style="color:#D7E2F1">See hourly prices, consumption and your contract. Scan to install.</p>
+        <div class="qr"><div class="qrbox" id="qrbox" role="img" aria-label="QR code to install the ANWB Energie app"></div><div><p style="font-size:14px;color:#D7E2F1;margin:0 0 8px">The QR code carries your web device id so the app session is linked to this visit.</p><a class="btn small" id="storeLink" target="_blank" rel="noopener">Open in Google Play</a></div></div>
+      </div>
+      <button class="xsell" data-product="ev_charging"><div><b>Add an ANWB charging card</b><span>Charge at your home tariff and see sessions in the app.</span></div></button>
+      <button class="xsell" data-product="solar"><div><b>Solar panels with 10% member discount</b><span>Cover 61% of your usage.</span></div></button>
+    </aside>
+  </div>
+</section>
+
+<!-- ================= EV CHARGING ================= -->
+<section class="page" id="p-ev">
+  <div class="hero"><div class="wrap"><h1>One charging card, 500,000 chargers</h1><p>The ANWB charging card works across Europe, with no subscription for members.</p><button class="btn" id="cardReq">Request charging card</button></div></div>
+  <div class="wrap two">
+    <div><div class="card"><h3>Charging at home vs public</h3><ul class="list"><li><span>Home with ANWB Energie dynamic</span><b>€ 0,19 / kWh</b></li><li><span>Public charger, average</span><b>€ 0,49 / kWh</b></li><li><span>Fast charger</span><b>€ 0,69 / kWh</b></li></ul></div>
+      <button class="xsell" id="evXsell" data-product="energy"><div><b>Charge at home for € 0,19 with ANWB Energie</b><span>Switch today, your charging card is billed with your energy.</span></div></button></div>
+    <aside><div class="card sand"><h3>Card requested?</h3><p>Track charging sessions in the ANWB Energie app.</p><button class="btn navy small" data-nav="energy">See energy tariffs</button></div></aside>
+  </div>
+</section>
+
+<!-- ================= SMART HOME ================= -->
+<section class="page" id="p-bundle">
+  <div class="hero"><div class="wrap"><h1>Solar, battery and wallbox in one bundle</h1><p>Use up to 74% of your own energy. Installed together, one monthly amount, member discount on all three.</p><button class="btn" id="bundleStart">Build my bundle</button></div></div>
+  <div class="wrap two">
+    <div><div class="card" id="bundleFlow" hidden><div class="steps"><i class="on"></i><i></i><i></i><i></i></div><div id="bundleStep"></div></div>
+      <div class="card"><h3>Why bundle</h3><ul class="list"><li><span>Solar + EV</span><b>charge on sunshine</b></li><li><span>Battery</span><b>buy at € 0,09, use at € 0,32</b></li><li><span>Installed together</span><b>one visit, one invoice</b></li></ul></div></div>
+    <aside><button class="xsell" data-product="energy"><div><b>Pair your bundle with a dynamic contract</b><span>Your battery charges in the cheapest hours automatically.</span></div></button></aside>
+  </div>
+</section>
+
+<!-- ================= ROADSIDE ================= -->
+<section class="page" id="p-roadside">
+  <div class="hero"><div class="wrap"><h1>Wegenwacht: help within 45 minutes</h1><p>Choose the coverage that fits how you drive.</p></div></div>
+  <div class="wrap"><div class="plans" id="plans">
+    <button class="plan" data-plan="Nederland"><b>Nederland</b><div class="price">€ 7,50<span style="font-size:14px;font-weight:400">/month</span></div><p>Roadside help across the Netherlands.</p></button>
+    <button class="plan" data-plan="Europa"><b>Europa</b><div class="price">€ 11,95<span style="font-size:14px;font-weight:400">/month</span></div><p>Help across Europe, including replacement car.</p></button>
+    <button class="plan" data-plan="Europa Plus"><b>Europa Plus</b><div class="price">€ 16,50<span style="font-size:14px;font-weight:400">/month</span></div><p>Europe plus repatriation and caravan.</p></button>
+  </div><div style="height:16px"></div><button class="btn navy" id="planStart" disabled>Start membership</button>
+  <button class="xsell" data-product="energy" style="margin-top:28px"><div><b>Members save on energy too</b><span>Switch to ANWB Energie and get € 50 welcome credit.</span></div></button></div>
+</section>
+
+<!-- ================= INSURANCE ================= -->
+<section class="page" id="p-insurance">
+  <div class="hero"><div class="wrap"><h1>Car insurance with 10% member discount</h1><p>Calculate your premium in two minutes.</p></div></div>
+  <div class="wrap two"><div class="card"><h3>Your car</h3><label for="plate">Licence plate</label><input id="plate" placeholder="AB-123-C"><label for="cov">Coverage</label><select id="cov"><option>Third party</option><option>Third party plus</option><option selected>All risk</option></select><div style="height:12px"></div><button class="btn navy" id="insStart">Calculate premium</button><div id="insResult"></div></div>
+  <aside><button class="xsell" data-product="energy"><div><b>Insurance and energy on one bill</b><span>Combine products and keep one overview in Mijn ANWB.</span></div></button></aside></div>
+</section>
+
+<!-- ================= TRAVEL / SHOP ================= -->
+<section class="page" id="p-travel"><div class="hero"><div class="wrap"><h1>Holidays by car, camper or bike</h1><p>Member deals on campsites and road trips.</p></div></div><div class="wrap grid">
+  <button class="tile" data-offer="Italy"><b>Lake Garda road trip</b><span>7 nights from € 489</span></button><button class="tile" data-offer="France"><b>Camping Dordogne</b><span>Member price € 32 per night</span></button><button class="tile" data-offer="Austria"><b>Tyrol in autumn</b><span>Chalet from € 610</span></button></div></section>
+<section class="page" id="p-shop"><div class="hero"><div class="wrap"><h1>Webshop</h1><p>Everything for the car, bike and camper.</p></div></div><div class="wrap grid">
+  <button class="tile" data-shop="EV charging cable"><b>EV charging cable type 2</b><span>€ 129, members € 116</span></button><button class="tile" data-shop="roof box"><b>Roof box 420 l</b><span>€ 389</span></button><button class="tile" data-shop="bike carrier"><b>Bike carrier for 2 e-bikes</b><span>€ 549</span></button></div></section>
+
+<!-- ================= MIJN ANWB ================= -->
+<section class="page" id="p-mijn"><div class="hero"><div class="wrap"><h1>Mijn ANWB</h1><p>Relationship number <b id="relShow">R200042</b>. Your products in one place.</p></div></div>
+  <div class="wrap"><div class="card"><ul class="list" id="myProducts"><li><span>Wegenwacht Europa</span><b>active</b></li><li><span>Car insurance, all risk</span><b>active</b></li><li><span>Energy</span><b><a href="#/energie" data-nav="energy">add energy</a></b></li><li><span>EV charging card</span><b><a href="#/ev-laden" data-nav="ev">request</a></b></li></ul></div></div></section>
+</main>
+
+<footer><div class="wrap">ANWB demo site for Amplitude. Not affiliated with ANWB B.V. All data shown is fictitious.</div></footer>
+
+<div class="modal" id="modal"><div class="box"><h3 style="margin-top:0">What a dynamic tariff means for your bill</h3><p>You pay the hourly market price plus purchasing cost and taxes. Prices are typically lowest at night and around midday, highest between 17:00 and 20:00. Households that shift the dishwasher, washing machine and EV charging save on average € 18 a month compared with a fixed contract.</p><p>Not sure? Many members start dynamic and switch to fixed later without a penalty.</p><button class="btn navy" id="modalClose">Got it</button></div></div>
+<div class="modal" id="loginModal"><div class="box"><h3 style="margin-top:0">Log in to Mijn ANWB</h3><label for="rel">Relationship number</label><input id="rel" value="R200042"><label for="pw">Password</label><input id="pw" type="password" value="demo-demo"><div style="height:14px"></div><button class="btn navy" id="loginGo">Log in</button> &nbsp; <button class="btn ghost" id="loginCancel">Cancel</button></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+  const C = window.ANWB_CONFIG, amp = window.amplitude, $ = s=>document.querySelector(s), $$ = s=>Array.from(document.querySelectorAll(s));
+  const track = (e,p)=>amp.track(e,p||{}); const toast = m=>{const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);};
+  const state = { member:false, user:null, ct:null, plan:null };
+
+  // ---- routing (hash based, works on GitHub Pages) ----
+  const routes = { home:['#/','Home','p-home'], energy:['#/energie','Energy','p-energy'], ev:['#/ev-laden','EV Charging','p-ev'], bundle:['#/smart-home','Smart Home','p-bundle'], roadside:['#/wegenwacht','Roadside Assistance','p-roadside'], insurance:['#/verzekeringen','Car Insurance','p-insurance'], travel:['#/vakantie','Holidays','p-travel'], shop:['#/webshop','Webshop','p-shop'], mijn:['#/mijn-anwb','My ANWB','p-mijn'] };
+  function show(name){
+    const r = routes[name] || routes.home; $$('.page').forEach(p=>p.classList.remove('active')); document.getElementById(r[2]).classList.add('active');
+    $$('nav.main a').forEach(a=>a.classList.toggle('active', a.dataset.nav===name)); window.scrollTo({top:0});
+    track('Page Viewed', { page_name:r[1], page_path:r[0].slice(1), page_domain: location.host });
+    if (name==='energy') renderEnergy();
+    if (name==='mijn') $('#relShow').textContent = state.user || 'R200042';
+  }
+  function nav(name){ location.hash = routes[name][0]; }
+  function fromHash(){ const h = location.hash || '#/'; const name = Object.keys(routes).find(k=>routes[k][0]===h) || 'home'; show(name); }
+  window.addEventListener('hashchange', fromHash);
+  document.addEventListener('click', e=>{ const a=e.target.closest('[data-nav]'); if (a){ e.preventDefault(); nav(a.dataset.nav); } });
+
+  // ---- home tiles + cross-sell ----
+  $$('[data-tile]').forEach(b=> b.onclick = ()=>{ track('Product Tile Clicked', { product: b.dataset.tile, placement:'home_grid' }); nav(b.dataset.tile); });
+  const xsellObserver = new IntersectionObserver(es=> es.forEach(en=>{ if (en.isIntersecting && !en.target.dataset.seen){ en.target.dataset.seen='1'; track('Cross-sell Banner Viewed', { product: en.target.dataset.product, placement: en.target.closest('.page').id.replace('p-','')+'_page' }); } }), { threshold:.6 });
+  $$('.xsell').forEach(x=>{ xsellObserver.observe(x); x.onclick = ()=>{ track('Cross-sell Banner Clicked', { product:x.dataset.product, placement: x.closest('.page').id.replace('p-','')+'_page' }); nav(x.dataset.product==='energy'?'energy': x.dataset.product==='ev_charging'?'ev':'bundle'); }; });
+
+  // ---- login ----
+  $('#loginBtn').onclick = ()=> state.member ? nav('mijn') : $('#loginModal').classList.add('open');
+  $('#loginCancel').onclick = ()=> $('#loginModal').classList.remove('open');
+  $('#loginGo').onclick = ()=>{ state.member=true; state.user=$('#rel').value.trim()||'R200042'; amp.setUserId(state.user);
+    const id = new amp.Identify(); id.set('visitor_type','member').set('logged_in',true).set('membership_tier','Plus').set('relationship_number',state.user).set('products_held',['roadside_assistance','car_insurance']).set('product_count',2).set('relationship_number_linked',true); amp.identify(id);
+    track('Login Completed', { login_method:'anwb_account' }); $('#loginModal').classList.remove('open'); $('#loginBtn').textContent='Mijn ANWB'; toast('Logged in as '+state.user); nav('mijn'); };
+
+  // ---- energy: web experiment hook, quote funnel, friction ----
+  let exposedHero = false;
+  function renderEnergy(){
+    // Web Experiment ("energy-page-bundle-hero") is applied visually by Amplitude's Web Experiment script when it is live.
+    // The #energyHero / #energyH1 / #energyP / #energyCta selectors are stable so the visual editor can target them.
+    // Until the experiment exists, a local fallback assigns a variant and tracks the exposure so the demo tells the story.
+    if (!exposedHero && !window.__ampWebExperimentActive) { exposedHero = true; const v = Math.random()<0.5?'control':'treatment';
+      if (v==='treatment'){ $('#energyHero').classList.add('bundle-first'); $('#energyH1').textContent='Dynamic energy, solar and your EV, working together'; $('#energyP').textContent='Members who combine energy with a charging card or solar save on average € 68 a month. Start with a tariff check.'; }
+      track('$exposure', { flag_key: C.webExperimentFlag, variant: v }); $('#energyHero').dataset.variant = v; }
+    renderQr();
+  }
+  $('#energyCta').onclick = ()=> $('#pc').focus();
+  $('#compareBtn').onclick = ()=>{ if (!$('#pc').value){ toast('Enter your postcode first'); return; } track('Energy Postcode Entered', { postcode_area: $('#pc').value.slice(0,4), household_size: $('#hh').selectedIndex+1 }); track('Energy Tariff Compared', { contract_types_shown:['dynamic','fixed_1y','fixed_3y'], cheapest:'dynamic' }); $('#tariffs').hidden=false; $('#tariffs').scrollIntoView({behavior:'smooth'}); };
+  $$('[data-ct]').forEach(b=> b.onclick = ()=>{ $$('[data-ct]').forEach(x=>x.classList.remove('on')); b.classList.add('on'); state.ct=b.dataset.ct; $('#quoteStart').disabled=false; track('Contract Type Selected', { contract_type: state.ct }); });
+  $('#explainer').onclick = e=>{ e.preventDefault(); $('#modal').classList.add('open'); state.explainerAt = Date.now(); };
+  $('#modalClose').onclick = ()=>{ $('#modal').classList.remove('open'); track('Dynamic Tariff Explainer Opened', { contract_type: state.ct||'none', time_on_explainer_s: Math.round((Date.now()-state.explainerAt)/1000) }); };
+  $('#quoteStart').onclick = ()=>{ track('Energy Quote Started', { contract_type: state.ct, hero_variant: $('#energyHero').dataset.variant||'live' }); $('#quoteForm').hidden=false;
+    if (state.member){ $('#qn').value='Sanne de Vries'; $('#qa').value='Keizersgracht 12, 1015 CN Amsterdam'; $('#qi').value='NL12 ANWB 0123 4567 89'; $('#prefillNote').innerHTML='<span class="pill green">Prefilled from Mijn ANWB</span>'; }
+    else { $('#prefillNote').innerHTML='<p class="pill">Log in to prefill your details and apply the member discount</p>'; }
+    $('#quoteForm').scrollIntoView({behavior:'smooth'}); };
+  $('#quoteDone').onclick = ()=>{ if (!$('#qn').value||!$('#qa').value){ toast('Please complete your details'); return; } const amount = {dynamic:118,fixed_1y:132,fixed_3y:139}[state.ct]; track('Energy Quote Completed', { contract_type: state.ct, monthly_amount_eur: amount, member_discount_applied: state.member, smart_meter: $('#smart').checked }); $('#okAmount').textContent='€ '+amount; $('#quoteForm').hidden=true; $('#quoteOk').hidden=false; $('#quoteOk').scrollIntoView({behavior:'smooth'}); };
+  $('#signup').onclick = ()=>{ track('Energy Signup Completed', { contract_type: state.ct, member: state.member }); $('#signup').disabled=true; $('#signedNote').innerHTML='<span class="pill green">Signed. Welcome credit € 50 added.</span>'; };
+
+  // ---- App download handoff: QR with the Amplitude web device id ----
+  function renderQr(){
+    const deviceId = amp.getDeviceId && amp.getDeviceId();
+    const url = (C.appUrl.startsWith('[') ? location.href.replace(/#.*$/,'').replace(/anwb-website\/?$/,'anwb-energie-app/') : C.appUrl) + '?amp_device_id=' + encodeURIComponent(deviceId||'') + '&utm_source=anwb.nl&utm_medium=qr_code&utm_campaign=energy-app-download';
+    $('#storeLink').href = url; // In production: an AppsFlyer OneLink / Play Store URL with the same parameters (Install Referrer carries them into the app).
+    const box = $('#qrbox'); box.innerHTML='';
+    if (window.QRCode) { box.style.display='block'; box.style.padding='6px'; new QRCode(box, { text:url, width:108, height:108, correctLevel: QRCode.CorrectLevel.L }); } else { let seed = 0; for (const ch of (deviceId||'anwb')) seed = (seed*31 + ch.charCodeAt(0)) >>> 0;
+    for (let i=0;i<81;i++){ seed = (seed*1103515245+12345) & 0x7fffffff; const d=document.createElement('i'); const r=Math.floor(i/9), c=i%9; const finder = (r<3&&c<3)||(r<3&&c>5)||(r>5&&c<3); if (!finder && (seed%3===0)) d.className='o'; box.appendChild(d); } }
+    if (!renderQr.seen){ renderQr.seen=true; track('App Download Banner Viewed', { app:'ANWB Energie', placement:'energy_page_sidebar' }); track('App QR Code Viewed', { app:'ANWB Energie', onelink_contains_device_id:true, web_device_id: deviceId }); }
+  }
+  $('#storeLink').onclick = ()=> track('App Store Link Clicked', { app:'ANWB Energie', store:'google_play', via:'qr_code' });
+
+  // ---- EV ----
+  $('#cardReq').onclick = ()=>{ track('Charging Card Requested', { card_type:'ANWB Laadpas', member: state.member }); toast('Charging card requested. It arrives within 5 working days.'); };
+
+  // ---- bundle configurator ----
+  const bundle = { steps:['solar','home_battery','ev_charger'], i:0, chosen:{} };
+  const stepUi = { solar:['Solar panels',['8 panels','10 panels','14 panels']], home_battery:['Home battery',['5 kWh','10 kWh','No battery']], ev_charger:['EV charger',['11 kW wallbox','22 kW wallbox','No charger']] };
+  $('#bundleStart').onclick = ()=>{ bundle.i=0; bundle.chosen={}; $('#bundleFlow').hidden=false; track('Bundle Configurator Started', { entry:'smart_home_page' }); renderBundle(); $('#bundleFlow').scrollIntoView({behavior:'smooth'}); };
+  function renderBundle(){ $$('#bundleFlow .steps i').forEach((el,k)=>el.classList.toggle('on',k<=bundle.i)); const box=$('#bundleStep');
+    if (bundle.i<3){ const [t,opts]=stepUi[bundle.steps[bundle.i]]; box.innerHTML=`<h3>${t}</h3><div class="choice">${opts.map(o=>`<button data-opt="${o}">${o}</button>`).join('')}</div>`; $$('#bundleStep [data-opt]').forEach(b=>b.onclick=()=>{ const step=bundle.steps[bundle.i]; bundle.chosen[step]=b.dataset.opt; track('Bundle Step Completed',{ step, option:b.dataset.opt, selected:!b.dataset.opt.startsWith('No') }); bundle.i++; renderBundle(); }); }
+    else { const products=Object.entries(bundle.chosen).filter(([k,v])=>!v.startsWith('No')).map(([k])=>k); const saving=35+products.length*28; track('Bundle Quote Viewed',{ products, bundle_size:products.length, monthly_saving_eur:saving });
+      box.innerHTML=`<h3>Your bundle</h3><ul class="list">${products.map(p=>`<li><span>${stepUi[p][0]}</span><b>${bundle.chosen[p]}</b></li>`).join('')}<li><span>Estimated saving</span><b style="color:var(--green)">€ ${saving} / month</b></li></ul><div style="height:12px"></div><button class="btn navy" id="bundleReq">Request bundle quote</button>`;
+      $('#bundleReq').onclick=()=>{ track('Bundle Quote Requested',{ products, member: state.member }); toast('Quote requested. An advisor calls you within two days.'); }; } }
+
+  // ---- roadside / insurance / travel / shop ----
+  $$('[data-plan]').forEach(b=> b.onclick=()=>{ $$('[data-plan]').forEach(x=>x.classList.remove('on')); b.classList.add('on'); state.plan=b.dataset.plan; $('#planStart').disabled=false; track('Membership Plan Compared', { plans:['Nederland','Europa','Europa Plus'], selected: state.plan }); });
+  $('#planStart').onclick=()=>{ track('Roadside Membership Started', { plan: state.plan }); toast('Welcome to Wegenwacht '+state.plan); };
+  $('#insStart').onclick=()=>{ track('Insurance Quote Started', { insurance_type:'car', coverage: $('#cov').value }); const p = {'Third party':32,'Third party plus':41,'All risk':58}[$('#cov').value]; setTimeout(()=>{ $('#insResult').innerHTML=`<div class="card sand"><b>Your premium: € ${p} per month</b> <span class="pill green">10% member discount applied</span></div>`; track('Insurance Quote Completed', { insurance_type:'car', monthly_premium_eur:p }); }, 500); };
+  $$('[data-offer]').forEach(b=> b.onclick=()=> track('Travel Offer Viewed', { destination: b.dataset.offer }));
+  $$('[data-shop]').forEach(b=> b.onclick=()=> track('Webshop Product Viewed', { product: b.dataset.shop }));
+
+  // ---- boot ----
+  const id = new amp.Identify(); id.setOnce('visitor_type','prospect').set('logged_in',false).set('device_type', /Mobi|Android/i.test(navigator.userAgent)?'mobile':'desktop'); amp.identify(id);
+  fromHash();
+})();
+</script>
+</body>
+</html>
